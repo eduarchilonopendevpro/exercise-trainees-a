@@ -16,7 +16,7 @@ WORKDIR /app
 COPY . /app
 
 # Ejecutar Maven para construir el proyecto
-RUN mvn -Dmaven.test.skip=true -DskipTests=true clean package
+RUN mvn -Dmaven.test.skip=false -DskipTests=false clean package
 
 # Crear una nueva imagen basada en OpenJDK 11
 FROM eclipse-temurin:11-jdk-jammy
