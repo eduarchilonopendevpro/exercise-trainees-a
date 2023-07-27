@@ -16,7 +16,7 @@ COPY . /app
 RUN mvn clean package
 
 # Crear una nueva imagen basada en OpenJDK 11
-FROM openjdk:17-jre-slim-buster
+FROM openjdk:17-jre-slim
 
 # Exponer el puerto que utilizará la aplicación
 EXPOSE 8080
