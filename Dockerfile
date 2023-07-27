@@ -1,25 +1,15 @@
-FROM ubuntu:latest AS build
+#
+# Build stage
+#
+FROM maven:3.6.0-jdk-17-slim AS build
+COPY src /home/app/src
+COPY pom.xml /home/app
+RUN mvn -f /home/app/pom.xml clean package
 
-RUN apt-get update
-RUN apt-get install openjdk-17-jdk -y
-COPY . .
-
-# Use an official Maven runtime as a base image with OpenJDK 17
-FROM maven:3.8.4-openjdk-17-slim
-
-# Establecer el directorio de trabajo en el contenedor
-WORKDIR /app
-
-# Copiar el archivo pom.xml y descargar las dependencias de Maven de forma aislada
-COPY pom.xml .
-
-RUN mvn dependency:go-offline
-
-# Copiar todo el código fuente al contenedor
-COPY src/ ./src/
-
-# Compilar la aplicación
-RUN mvn package
-
-# Comando para ejecutar la aplicación, ajusta esto según tu configuración
-CMD ["java", "-jar", "target/tu-app.jar"]
+#
+# Package stage
+#
+FROM openjdk:11-jre-slim
+COPY --from=build /home/app/target/demo-0.0.1-SNAPSHOT.jar /usr/local/lib/demo.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","/usr/local/lib/demo.jar"]
