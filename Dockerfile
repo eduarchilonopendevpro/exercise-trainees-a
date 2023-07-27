@@ -4,7 +4,7 @@ LABEL authors="chilon_e"
 ENTRYPOINT ["top", "-b"]
 
 # Usar una imagen base con JDK 11 y Maven
-FROM maven:3.6.3-openjdk-17 AS build
+FROM maven:3.6.3-openjdk-11 AS build
 
 # Establecer un directorio de trabajo
 WORKDIR /app
@@ -16,7 +16,7 @@ COPY . /app
 RUN mvn clean package
 
 # Crear una nueva imagen basada en OpenJDK 11
-FROM openjdk:17-jre-slim
+FROM openjdk:11-jre-slim-buster
 
 # Exponer el puerto que utilizará la aplicación
 EXPOSE 8080
