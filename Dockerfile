@@ -28,4 +28,4 @@ EXPOSE 8080
 COPY --from=build /app/target/exercise-trainees-a-0.0.1-SNAPSHOT.jar /app/exercise-trainees-a-0.0.1-SNAPSHOT.jar
 
 # Establecer el punto de entrada para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "/app/Peugeot-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "/app/exercise-trainees-a-0.0.1-SNAPSHOT.jar"]
