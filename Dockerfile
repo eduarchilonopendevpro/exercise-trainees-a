@@ -7,7 +7,7 @@
 #ENTRYPOINT ["java", "-jar", "app.jar"]
 
 # Usar una imagen base con JDK 11 y Maven
-FROM maven:3.6.3-openjdk-17 AS build
+FROM maven:3.6.3-openjdk-11 AS build
 
 # Establecer un directorio de trabajo
 WORKDIR /app
@@ -19,7 +19,7 @@ COPY . /app
 RUN mvn -Dmaven.test.skip=true -DskipTests=true clean package
 
 # Crear una nueva imagen basada en OpenJDK 11
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:11-jdk-jammy
 
 # Exponer el puerto que utilizará la aplicación
 EXPOSE 8080
