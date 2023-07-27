@@ -75,9 +75,8 @@ public class ReporteService implements IReporteService {
                 reportesAgrupados.put(key, reporte);
             }
         }
-        List<Reporte> nuevosReportes = reportesAgrupados.values().stream()
+        return reportesAgrupados.values().stream()
                 .sorted((x, y) -> x.getYear().compareTo(y.getYear()))
                 .collect(Collectors.toList());
-        return nuevosReportes;
     }
 }

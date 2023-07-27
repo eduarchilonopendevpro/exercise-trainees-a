@@ -1,8 +1,7 @@
 package com.opendevpro.controller;
 import com.opendevpro.component.VentaValidator;
-import com.opendevpro.exception.AutosNotFoundException;
+import com.opendevpro.exception.AutoNotFoundException;
 import com.opendevpro.model.Venta;
-import com.opendevpro.service.interfaces.IAutoService;
 import com.opendevpro.service.interfaces.IVentaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.slf4j.MDC;
 
 @RestController
 @RequestMapping("/ventas")
@@ -38,7 +36,7 @@ public class VentaController {
                 this.iVentaService.createVenta(venta);
                 logger.info("OK = VentaController.crearUnaVenta(): " + venta);
                 return ResponseEntity.ok("Venta creada con exito.");
-            }catch (AutosNotFoundException ex){
+            }catch (AutoNotFoundException ex){
                 logger.error("ERROR = VentaController.crearUnaVenta(): " + ex.getMessage());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
             }

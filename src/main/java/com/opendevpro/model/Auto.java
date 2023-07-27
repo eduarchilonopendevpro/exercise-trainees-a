@@ -165,11 +165,11 @@ public class Auto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Auto auto = (Auto) o;
-        return Objects.equals(brand, auto.brand) && Objects.equals(wheels, auto.wheels) && Objects.equals(type, auto.type) && Objects.equals(color, auto.color) && Objects.equals(doors, auto.doors) && Objects.equals(maxSpeed, auto.maxSpeed) && Objects.equals(engine, auto.engine) && Objects.equals(torque, auto.torque) && Objects.equals(hp, auto.hp) && Objects.equals(price, auto.price) && Objects.equals(stock, auto.stock);
+        return Objects.equals(brand, auto.brand) && Objects.equals(wheels, auto.wheels) && Objects.equals(type, auto.type) && Objects.equals(color, auto.color) && Objects.equals(doors, auto.doors) && Objects.equals(maxSpeed, auto.maxSpeed) && Objects.equals(engine, auto.engine) && Objects.equals(torque, auto.torque) && Objects.equals(hp, auto.hp) && Objects.equals(price, auto.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(brand, wheels, type, color, doors, maxSpeed, engine, torque, hp, price, stock);
+        return Objects.hash(brand, wheels, type, color, doors, maxSpeed, engine, torque, hp, price);
     }
 }

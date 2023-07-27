@@ -1,6 +1,7 @@
 package com.opendevpro.service;
 
-import com.opendevpro.exception.AutosNotFoundException;
+import com.opendevpro.exception.AutoFoundException;
+import com.opendevpro.exception.AutoNotFoundException;
 import com.opendevpro.model.Auto;
 import com.opendevpro.repository.IAutoRepository;
 import com.opendevpro.service.interfaces.IAutoService;
@@ -9,38 +10,48 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class AutoService implements IAutoService {
 
-    @Autowired
     private IAutoRepository iAutoRepository;
 
+    @Autowired
     public AutoService(IAutoRepository iAutoRepository) {
         this.iAutoRepository = iAutoRepository;
     }
 
     @Override
-    public Auto crearAuto(Auto auto) {
+    public Auto crearAuto(Auto auto) throws AutoFoundException{
+        List<Auto> autos = this.iAutoRepository.findAll();
+        if(autos.contains(auto)){
+            throw new AutoFoundException();
+        }
         return this.iAutoRepository.save(auto);
     }
 
     @Override
-    public Auto buscarAutoPorId(Integer id) {
-        return this.iAutoRepository.findById(id).orElse(null);
+    public Auto buscarAutoPorId(Integer id) throws AutoNotFoundException {
+        Optional<Auto> auto = this.iAutoRepository.findById(id);
+        if (auto.isEmpty()) {
+            throw new AutoNotFoundException();
+        }
+        return auto.get();
     }
 
     @Override
-    public Auto buscarAutoConStockPorId(Integer id) {
+    public Auto buscarAutoConStockPorId(Integer id) throws AutoNotFoundException {
         List<Auto> autos = this.iAutoRepository.findAll();
         Auto autoBUscado = null;
         for (Auto a : autos) {
             if (a.getStock() > 0 && a.getId().equals(id)) {
                 autoBUscado = a;
             }
+        }
+        if (autoBUscado == null) {
+            throw new AutoNotFoundException();
         }
         return autoBUscado;
     }
@@ -62,30 +73,34 @@ public class AutoService implements IAutoService {
     public List<Auto> obtenerTodosLosAutosConStock(String order, String tipo) {
         List<Auto> autosDisponibles = new ArrayList<>();
         if (order != null && order.toUpperCase().equals("ASC")) {
-            if (tipo != null && tipo.toUpperCase().equals("ORM")){
+            if (tipo != null && tipo.toUpperCase().equals("ORM")) {
                 autosDisponibles = this.iAutoRepository.ordernarPorORMASC();
-            }else{
+            } else {
                 autosDisponibles = this.obtenerTodosLosAutosConStock()
                         .stream().sorted((x, y) -> x.getBrand().compareTo(y.getBrand())).collect(Collectors.toList());
             }
         } else if (order != null && order.toUpperCase().equals("DSC")) {
-            if (tipo != null && tipo.toUpperCase().equals("ORM")){
+            if (tipo != null && tipo.toUpperCase().equals("ORM")) {
                 autosDisponibles = this.iAutoRepository.ordernarPorORMDESC();
-            }else{
+            } else {
                 autosDisponibles = this.obtenerTodosLosAutosConStock()
                         .stream().sorted((x, y) -> y.getBrand().compareTo(x.getBrand())).collect(Collectors.toList());
             }
         } else {
             autosDisponibles = this.iAutoRepository.findAll()
                     .stream().filter((a) -> a.getStock() > 0)
-                    .collect(Collectors.toList());;
+                    .collect(Collectors.toList());
         }
         return autosDisponibles;
     }
 
     @Override
-    public void eliminarAuto(Integer id) {
-        this.iAutoRepository.deleteById(id);
+    public void eliminarAuto(Integer id) throws AutoNotFoundException{
+        Optional<Auto> auto = this.iAutoRepository.findById(id);
+        if (auto.isEmpty()) {
+            throw new AutoNotFoundException();
+        }
+        this.iAutoRepository.delete(auto.get());
     }
 
     @Override
